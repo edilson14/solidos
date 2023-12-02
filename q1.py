@@ -177,36 +177,7 @@ def plotar_tronco_piramide(vertices, faces, tamanho_base, tamanho_topo, altura):
     plt.show()
 
 
-def toroide(raio_origem_toroide, raio_abertura_toroide, quantidades_pontos_circulo=30, num_points_per_circle=100,
-            origin=np.array([0, 0, 0])):
-    # Inicializa as listas para armazenar vértices e arestas
-    vertices = []
-    edges = []
-
-    # Gera os vértices do toroide
-    # quanto maior for a quantidade de circunferencias, mais redondo será o toroide
-    for i in range(quantidades_pontos_circulo):
-        theta = 2 * np.pi * i / quantidades_pontos_circulo
-        circle_center = np.array([raio_origem_toroide * np.cos(theta), raio_origem_toroide * np.sin(theta), 0])
-
-        for j in range(num_points_per_circle):
-            phi = 2 * np.pi * j / num_points_per_circle
-            point = circle_center + np.array(
-                [raio_abertura_toroide * np.cos(phi), raio_abertura_toroide * np.sin(phi), 0])
-            vertices.append(point)
-
-    # Gera as arestas do toroide
-    for i in range(quantidades_pontos_circulo):
-        for j in range(num_points_per_circle):
-            current_index = i * num_points_per_circle + j
-            next_index = (i + 1) % quantidades_pontos_circulo * num_points_per_circle + j
-
-            edges.append((current_index, next_index))
-
-    return np.array(vertices), edges
-
-
-def plot_toroide(r_raio, R_raio, circunferencias_intermediarias):
+def toroide(r_raio, R_raio, circunferencias_intermediarias):
     phi = np.linspace(0, 2 * np.pi, circunferencias_intermediarias + 1)
     theta = np.linspace(0, 2 * np.pi, circunferencias_intermediarias + 1)
 
@@ -215,17 +186,37 @@ def plot_toroide(r_raio, R_raio, circunferencias_intermediarias):
     y = (R_raio + r_raio * np.cos(phi)) * np.sin(theta)
     z = r_raio * np.sin(phi)
 
+    vertices = np.column_stack([x.flatten(), y.flatten(), z.flatten()])
+
+    arestas = []
+    for i in range(circunferencias_intermediarias + 1):
+        for j in range(circunferencias_intermediarias + 1):
+            if j < circunferencias_intermediarias:
+                arestas.append([i * (circunferencias_intermediarias + 1) + j,
+                                i * (circunferencias_intermediarias + 1) + j + 1])
+            if i < circunferencias_intermediarias:
+                arestas.append([i * (circunferencias_intermediarias + 1) + j,
+                                (i + 1) * (circunferencias_intermediarias + 1) + j])
+
+    return vertices, arestas
+
+
+def plot_toroide(vertices, arestas):
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
-    ax.plot_surface(x, y, z, alpha=0.5)
+
+    for aresta in arestas:
+        ax.plot3D(*zip(*vertices[aresta]), color='b')
 
     plt.show()
+
 
 # Exemplo de uso
 R = 10
 r = 5
 num_circles = 30
-plot_toroide(r_raio=5, R_raio=10, circunferencias_intermediarias=30)
+vertices, arestas = toroide(r, R, num_circles)
+plot_toroide(vertices, arestas)
 
 tamanho_base = 2
 tamanho_topo = 8
