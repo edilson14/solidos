@@ -1,9 +1,10 @@
 import  matplotlib.pyplot as plt
 import numpy as np
-from objetos import cilindro
+from objetos.cilindro import cilindro
 from objetos.esfera import criar_esfera
+from objetos.cubo import cubo
 
-from q1 import plot_solido
+
 
 
 fig = plt.figure()
@@ -37,7 +38,7 @@ def plots():
 
     # Cilindro
     raio = 4
-    vertices, arestas = cilindro.cilindro(raio=raio)
+    vertices, arestas = cilindro(raio=raio)
     translacao_cilindro = matriz_translacao(raio +1,raio,raio )
     escala= matriz_escalonamento(1/2,0.5,0.5)
     for aresta in arestas:
@@ -61,6 +62,20 @@ def plots():
         vertice_escalado = vertice_escalado[:, :3]  # remover a ultima coluna por causa da coordenadas homogenias
 
         ax.plot3D(*zip(*vertice_escalado), color='blue')
+
+    #cubo
+    tamanho_aresta = 3
+    vertices_cubos , arestas_cubos = cubo(tamanho_aresta)
+    translacao_cubo = matriz_translacao(tamanho_aresta +2,1,0)
+    for aresta in arestas_cubos:
+        vertice_homo = np.concatenate(
+            [np.array(vertices_cubos[aresta]), np.ones((np.array(vertices_cubos[aresta]).shape[0], 1))],
+            axis=-1)
+        vertice_translado = (translacao_cubo @ vertice_homo.T).T
+        vertice_translado = vertice_translado[:,:3] # remover a ultima coluna por causa da coordenadas homogenias
+
+
+        ax.plot3D(*zip(*vertice_translado), color='green')
 
 
 
