@@ -1,6 +1,8 @@
 import  matplotlib.pyplot as plt
 import numpy as np
 from objetos import cilindro
+from objetos.esfera import criar_esfera
+
 from q1 import plot_solido
 
 
@@ -34,10 +36,10 @@ def plots():
 
 
     # Cilindro
-    raio = 5
+    raio = 4
     vertices, arestas = cilindro.cilindro(raio=raio)
     translacao_cilindro = matriz_translacao(raio +1,raio,raio )
-    escala= matriz_escalonamento(0.5,0.5,0.5)
+    escala= matriz_escalonamento(1/2,0.5,0.5)
     for aresta in arestas:
         vertice_homo = np.concatenate([np.array(vertices[aresta]),np.ones((np.array(vertices[aresta]).shape[0],1))],axis=-1)
         vertice_translado = (translacao_cilindro @ vertice_homo.T).T
@@ -45,6 +47,21 @@ def plots():
         vertice_escalado = vertice_escalado[:,:3] # remover a ultima coluna por causa da coordenadas homogenias
 
         ax.plot3D(*zip(*vertice_escalado), color='red')
+
+    #Esfera
+    raio_esfera = 3
+    vertices_esfera, arestas_esfera = criar_esfera(raio_esfera,10)
+    translacao_esfera = matriz_translacao(raio_esfera *3, raio_esfera*4, raio_esfera*3)
+    # escala = matriz_escalonamento(0.5, 0.5, 0.5)
+    for aresta in arestas_esfera:
+        vertice_homo = np.concatenate([np.array(vertices_esfera[aresta]), np.ones((np.array(vertices_esfera[aresta]).shape[0], 1))],
+                                      axis=-1)
+        vertice_translado = (translacao_esfera @ vertice_homo.T).T
+        vertice_escalado = (escala @ vertice_translado.T).T
+        vertice_escalado = vertice_escalado[:, :3]  # remover a ultima coluna por causa da coordenadas homogenias
+
+        ax.plot3D(*zip(*vertice_escalado), color='blue')
+
 
 
 
