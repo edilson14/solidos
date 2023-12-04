@@ -1,5 +1,7 @@
 import  matplotlib.pyplot as plt
 import numpy as np
+
+from objetos.cone import cone
 from objetos.cilindro import cilindro
 from objetos.esfera import criar_esfera
 from objetos.cubo import cubo
@@ -8,7 +10,7 @@ from objetos.cubo import cubo
 
 
 fig = plt.figure()
-ax = fig.add_subplot(111,projection='3d')
+ax = fig.add_subplot(1,1,1,projection='3d')
 ax.set_title('Coordenadas do Mundo')
     # Define os limites do gráfico
 limites = [-10, 10]
@@ -77,12 +79,28 @@ def plots():
 
         ax.plot3D(*zip(*vertice_translado), color='green')
 
+    #Cone
+    raio_base = 6
+    vertices_cone, aresta_cone = cone(raio_base)
+    escalonamento_cone = matriz_escalonamento(0.5,0.5,0.5)
+    translacao_cone = matriz_translacao(-4,5,0)
+    for aresta in aresta_cone:
+        vertices_homo = np.concatenate(
+            [np.array(vertices_cone[aresta]),np.ones((np.array(vertices_cone[aresta]).shape[0],1))]
+            ,axis=-1
+        )
+        vertice_escalonado = (escalonamento_cone @ vertices_homo.T).T
+        vertice_translado = (translacao_cone @ vertice_escalonado.T).T
+        vertice_translado = vertice_translado[:,:3]
+
+
+        ax.plot3D(*zip(*vertice_translado),color="black")
 
 
 
 
 
-
+    plt.grid()
     plt.show()
 
 plots()
