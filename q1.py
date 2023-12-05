@@ -37,7 +37,7 @@ def questao_um():
     tamanho_base = 2
     tamanho_topo = 8
     altura = 4
-    vertices, arestas = tronco(tamanho_base, tamanho_topo, altura)
+    vertices, arestas = tronco(altura=altura, tamanho_aresta_topo=tamanho_topo, tamanho_aresta_base=tamanho_base)
     plot_solido(vertices, arestas)
 
 

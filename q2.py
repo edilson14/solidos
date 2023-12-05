@@ -5,7 +5,8 @@ from objetos.cone import cone
 from objetos.cilindro import cilindro
 from objetos.esfera import criar_esfera
 from objetos.cubo import cubo
-
+from objetos.tronco import tronco
+from objetos.toroide import toroide
 
 
 
@@ -34,15 +35,28 @@ def matriz_escalonamento(x,y,z):
 
 
 
-
+escala= matriz_escalonamento(1/2,0.5,0.5)
 def plots():
+    # Esfera
+    raio_esfera = 3
+    vertices_esfera, arestas_esfera = criar_esfera(raio_esfera, 10)
+    translacao_esfera = matriz_translacao(raio_esfera * 3, raio_esfera * 4, raio_esfera * 3)
+    # escala = matriz_escalonamento(0.5, 0.5, 0.5)
+    for aresta in arestas_esfera:
+        vertice_homo = np.concatenate(
+            [np.array(vertices_esfera[aresta]), np.ones((np.array(vertices_esfera[aresta]).shape[0], 1))],
+            axis=-1)
+        vertice_translado = (translacao_esfera @ vertice_homo.T).T
+        vertice_escalado = (escala @ vertice_translado.T).T
+        vertice_escalado = vertice_escalado[:, :3]  # remover a ultima coluna por causa da coordenadas homogenias
 
+        ax.plot3D(*zip(*vertice_escalado), color='blue')
 
     # Cilindro
     raio = 4
     vertices, arestas = cilindro(raio=raio)
     translacao_cilindro = matriz_translacao(raio +1,raio,raio )
-    escala= matriz_escalonamento(1/2,0.5,0.5)
+
     for aresta in arestas:
         vertice_homo = np.concatenate([np.array(vertices[aresta]),np.ones((np.array(vertices[aresta]).shape[0],1))],axis=-1)
         vertice_translado = (translacao_cilindro @ vertice_homo.T).T
@@ -50,20 +64,6 @@ def plots():
         vertice_escalado = vertice_escalado[:,:3] # remover a ultima coluna por causa da coordenadas homogenias
 
         ax.plot3D(*zip(*vertice_escalado), color='red')
-
-    #Esfera
-    raio_esfera = 3
-    vertices_esfera, arestas_esfera = criar_esfera(raio_esfera,10)
-    translacao_esfera = matriz_translacao(raio_esfera *3, raio_esfera*4, raio_esfera*3)
-    # escala = matriz_escalonamento(0.5, 0.5, 0.5)
-    for aresta in arestas_esfera:
-        vertice_homo = np.concatenate([np.array(vertices_esfera[aresta]), np.ones((np.array(vertices_esfera[aresta]).shape[0], 1))],
-                                      axis=-1)
-        vertice_translado = (translacao_esfera @ vertice_homo.T).T
-        vertice_escalado = (escala @ vertice_translado.T).T
-        vertice_escalado = vertice_escalado[:, :3]  # remover a ultima coluna por causa da coordenadas homogenias
-
-        ax.plot3D(*zip(*vertice_escalado), color='blue')
 
     #cubo
     tamanho_aresta = 3
@@ -83,7 +83,7 @@ def plots():
     raio_base = 6
     vertices_cone, aresta_cone = cone(raio_base)
     escalonamento_cone = matriz_escalonamento(0.5,0.5,0.5)
-    translacao_cone = matriz_translacao(-4,5,0)
+    translacao_cone = matriz_translacao(-5,10,0)
     for aresta in aresta_cone:
         vertices_homo = np.concatenate(
             [np.array(vertices_cone[aresta]),np.ones((np.array(vertices_cone[aresta]).shape[0],1))]
@@ -96,7 +96,42 @@ def plots():
 
         ax.plot3D(*zip(*vertice_translado),color="black")
 
+    #tronco de piramide
+    tamanho_base = 8
+    tamanho_topo = 4
+    altura = 5
+    vertices_tronco, arestas_tronco = tronco(tamanho_aresta_base=tamanho_base,tamanho_aresta_topo=tamanho_topo,altura=altura)
+    translacao_tronco = matriz_translacao(-5,5,0)
+    escalonamento_tronco = matriz_escalonamento(1,0.6,1)
+    for aresta in arestas_tronco:
+        vertices_homo = np.concatenate(
+            [np.array(vertices_tronco[aresta]),np.ones((np.array(vertices_tronco[aresta]).shape[0],1))],
+            axis=-1
+        )
+        vertices_ecalonado  = (translacao_tronco @ vertices_homo.T).T
+        vertice_final = (escalonamento_tronco @ vertices_ecalonado.T).T
+        vertice_final = vertice_final[:,:3]
 
+        ax.plot(*zip(*vertice_final),color="yellow")
+
+
+    #toroide
+
+    Raio = 2
+    raio = 1
+    vertices_toroide, arestas_toroide = toroide(r_raio=raio,R_raio=Raio,circunferencias_intermediarias=10)
+    translacao_tronco = matriz_translacao(-5,5,10)
+    escalonamento_tronco = matriz_escalonamento(1,0.6,1)
+    for aresta in arestas_toroide:
+        vertices_homo = np.concatenate(
+            [np.array(vertices_toroide[aresta]),np.ones((np.array(vertices_toroide[aresta]).shape[0],1))],
+            axis=-1
+        )
+        vertices_ecalonado  = (translacao_tronco @ vertices_homo.T).T
+        vertice_final = (escalonamento_tronco @ vertices_ecalonado.T).T
+        vertice_final = vertice_final[:,:3]
+
+        ax.plot(*zip(*vertice_final),color="grey")
 
 
 
