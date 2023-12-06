@@ -10,13 +10,15 @@ def calcular_centro(pontos_transformados):
     return centro
 
 
-def mostrar_solidos_no_sistema_de_camera(ax, pontos_solidos, matriz_transformacao, cor):
+def mostrar_solidos_no_sistema_de_camera(ax, pontos_solido, arestas_solido, matriz_transformacao, cor):
     # Transforma os pontos usando a matriz de transformação
-    pontos_solidos_homogeneos = np.hstack((pontos_solidos, np.ones((pontos_solidos.shape[0], 1)))).T
+    pontos_solidos_homogeneos = np.hstack((pontos_solido, np.ones((pontos_solido.shape[0], 1)))).T
     pontos_transformados = np.dot(matriz_transformacao, pontos_solidos_homogeneos).T
 
+    pontos_transformados = pontos_transformados[:, :3]
     # Plota os pontos transformados
-    ax.plot(pontos_transformados[:, 0], pontos_transformados[:, 1], pontos_transformados[:, 2], c=cor)
+    for aresta in arestas_solido:
+        ax.plot3D(*zip(*pontos_transformados[aresta]), color=cor)
 
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
@@ -27,14 +29,18 @@ def questao_tres():
     # Pega pontos dos objetos da questão 2
     pontos = questao_dois()
 
-    esfera = pontos['esfera']
-    cilindro = pontos['cilindro']
-    cubo = pontos['cubo']
+    pontos_esfera = pontos['pontos_esfera']
+    pontos_cilindro = pontos['pontos_cilindro']
+    pontos_cubo = pontos['pontos_cubo']
+
+    arestas_esfera = pontos['arestas_esfera']
+    arestas_cilindro = pontos['arestas_cilindro']
+    arestas_cubo = pontos['arestas_cubo']
 
     # Calcula o centro dos objetos
-    centro_esfera = calcular_centro(esfera)
-    centro_cilindro = calcular_centro(cilindro)
-    centro_cubo = calcular_centro(cubo)
+    centro_esfera = calcular_centro(pontos_esfera)
+    centro_cilindro = calcular_centro(pontos_cilindro)
+    centro_cubo = calcular_centro(pontos_cubo)
 
     at = (centro_esfera + centro_cilindro + centro_cubo) / 3.0  # Média dos centros
 
@@ -74,17 +80,20 @@ def questao_tres():
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
-    ax.plot([0, u[0]], [0, u[1]], [0, u[2]], color='b', linestyle='dashed')
-    ax.plot([0, v[0]], [0, v[1]], [0, v[2]], color='r', linestyle='dashed')
-    ax.plot([0, n[0]], [0, n[1]], [0, n[2]], color='g', linestyle='dashed')
-    ax.plot([0, aux[0]], [0, aux[1]], [0, aux[2]], color='k', linestyle='dashed')
-    ax.set_xlim(-10, 10)
-    ax.set_ylim(-10, 10)
-    ax.set_zlim(-10, 10)
+    ax.plot([0, u[0] * 3], [0, u[1] * 3], [0, u[2] * 3], color='b', linestyle='dashed')
+    ax.plot([0, v[0] * 3], [0, v[1] * 3], [0, v[2] * 3], color='r', linestyle='dashed')
+    ax.plot([0, n[0] * -3], [0, n[1] * -3], [0, n[2] * -3], color='g', linestyle='dashed')
+    ax.plot([0, aux[0] * 3], [0, aux[1] * 3], [0, aux[2] * 3], color='k', linestyle='dashed')
 
-    mostrar_solidos_no_sistema_de_camera(ax, esfera, matriz_transformacao, 'b')
-    mostrar_solidos_no_sistema_de_camera(ax, cubo, matriz_transformacao, 'g')
-    mostrar_solidos_no_sistema_de_camera(ax, cilindro, matriz_transformacao, 'r')
+    # Adicionando descrições para cada linha
+    ax.text(u[0] * 3, u[1] * 3, u[2] * 3, 'vetor u', color='b')
+    ax.text(v[0] * 3, v[1] * 3, v[2] * 3, 'vetor v', color='r')
+    ax.text(n[0] * -3, n[1] * -3, n[2] * -3, 'vetor n', color='g')
+    ax.text(aux[0] * 3, aux[1] * 3, aux[2] * 3, 'vetor aux', color='k')
+
+    mostrar_solidos_no_sistema_de_camera(ax, pontos_cubo, arestas_cubo, matriz_transformacao, 'g')
+    mostrar_solidos_no_sistema_de_camera(ax, pontos_esfera, arestas_esfera, matriz_transformacao, 'b')
+    mostrar_solidos_no_sistema_de_camera(ax, pontos_cilindro, arestas_cilindro, matriz_transformacao, 'r')
 
     plt.show()
 

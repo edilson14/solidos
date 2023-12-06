@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from mpl_toolkits.mplot3d.art3d import Line3DCollection
 
 from objetos.cone import cone
 from objetos.cilindro import cilindro
@@ -42,17 +43,13 @@ def matriz_escalonamento(sx, sy, sz):
 
 
 def plot_3d(ax, vertices, arestas, transformacao, cor):
-    todos_pontos = []
-    for aresta in arestas:
-        vertice_homo = np.concatenate([np.array(vertices[aresta]), np.ones((np.array(vertices[aresta]).shape[0], 1))],
-                                      axis=-1)
-        vertice_transformado = (transformacao @ vertice_homo.T).T
-        vertice_transformado = vertice_transformado[:, :3]
-        todos_pontos.append(vertice_transformado)
+    vertices_homogeneos = np.concatenate([vertices, np.ones((vertices.shape[0], 1))], axis=-1)
+    vertices_transformados = (transformacao @ vertices_homogeneos.T).T[:, :3]
 
-        ax.plot3D(*zip(*vertice_transformado), color=cor)
+    linhas = [(vertices_transformados[aresta[0]], vertices_transformados[aresta[1]]) for aresta in arestas]
+    ax.add_collection3d(Line3DCollection(linhas, colors=cor))
 
-    return np.vstack(todos_pontos)
+    return vertices_transformados
 
 
 def questao_dois():
@@ -80,8 +77,8 @@ def questao_dois():
     # Cone
     raio_base_cone = 6
     vertices_cone, arestas_cone = cone(raio_base_cone)
-    translacao_cone = matriz_translacao(-5, 10, 0)
-    escala_cone = matriz_escalonamento(0.5, 0.5, 0.5)
+    translacao_cone = matriz_translacao(-5, 8.5, 0)
+    escala_cone = matriz_escalonamento(0.4, 0.4, 0.4)
     pontos_cone = plot_3d(ax, vertices_cone, arestas_cone, translacao_cone @ escala_cone, 'black')
 
     # Tronco de pirâmide
@@ -107,10 +104,16 @@ def questao_dois():
     plt.show()
 
     return {
-        'esfera': pontos_esfera,
-        'cilindro': pontos_cilindro,
-        'cubo': pontos_cubo,
-        'cone': pontos_cone,
-        'tronco': pontos_tronco,
-        'toroide': pontos_toroide,
+        'pontos_esfera': pontos_esfera,
+        'pontos_cilindro': pontos_cilindro,
+        'pontos_cubo': pontos_cubo,
+        'pontos_cone': pontos_cone,
+        'pontos_tronco': pontos_tronco,
+        'pontos_toroide': pontos_toroide,
+        'arestas_esfera': arestas_esfera,
+        'arestas_cilindro': arestas_cilindro,
+        'arestas_cubo': arestas_cubo,
+        'arestas_cone': arestas_cone,
+        'arestas_tronco': arestas_tronco,
+        'arestas_toroide': arestas_toroide,
     }
