@@ -22,6 +22,8 @@ for s in [-1, 1]:
     ax.plot([0, 0], [s * limites[0], s * limites[1]], [0, 0], color='k', linestyle='--', linewidth=1)
     ax.plot([s * limites[0], s * limites[1]], [0, 0], [0, 0], color='k', linestyle='--', linewidth=1)
     # Legenda
+
+
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_zlabel('Z')
@@ -63,7 +65,7 @@ def questao_dois():
     # Cilindro
     raio_cilindro = 4
     vertices_cilindro, arestas_cilindro = cilindro(raio=raio_cilindro)
-    translacao_cilindro = matriz_translacao(raio_cilindro + 1, raio_cilindro, raio_cilindro)
+    translacao_cilindro = matriz_translacao(raio_cilindro + 1, raio_cilindro, 0)
     escala_cilindro = matriz_escalonamento(1 / 2, 0.5, 0.5)
     pontos_cilindro = plot_3d(ax, vertices_cilindro, arestas_cilindro, escala_cilindro @ translacao_cilindro, 'red')
 
@@ -99,6 +101,18 @@ def questao_dois():
     translacao_toroide = matriz_translacao(-5, 5, 10)
     escala_toroide = matriz_escalonamento(1, 0.6, 1)
     pontos_toroide = plot_3d(ax, vertices_toroide, arestas_toroide, escala_toroide @ translacao_toroide, 'grey')
+
+    x = np.linspace(-10, 10, 100)
+    y = np.linspace(-10, 10, 100)
+    X, Y = np.meshgrid(x, y)
+    Z = np.zeros_like(X)
+
+    ax.plot_surface(X, Y, Z, color='red', alpha=0.3)
+    ax.plot_surface(X, Z, Y, color='green', alpha=0.3)
+    ax.plot_surface(Z, X, Y, color='gray', alpha=0.3)
+
+    ax.scatter(5, -5, 5, color='black', s=100)
+
 
     plt.grid()
     plt.show()
