@@ -23,6 +23,18 @@ for s in [-1, 1]:
     ax.plot([s * limites[0], s * limites[1]], [0, 0], [0, 0], color='k', linestyle='--', linewidth=1)
     # Legenda
 
+# definição dos octantes
+ax.text(5, 5, 5, "octante 1") #(+,+,+)
+ax.text(-5, 5, 5, "octante 2")#(-,+,+)
+ax.text(-5, -5, 5, "octante 3")#(-,-,+)
+ax.text(5, -5, 5, "octante 4")#(+,-,+)
+ax.text(5, 5, -5, "octante 5")#(+,+,-)
+ax.text(-5, 5, -5, "octante 6")#(-,+,-)
+ax.text(-5, -5, -5, "octante 7")#(-,-,-)
+ax.text(5, -5, -5, "octante 8")#(+,-,-)
+# ax
+
+
 
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
@@ -43,11 +55,45 @@ def matriz_escalonamento(sx, sy, sz):
                      [0, 0, sz, 0],
                      [0, 0, 0, 1]])
 
+def rotacao_x(theta):
+    return np.array([
+        [1, 0, 0, 0],
+        [0, np.cos(theta), -np.sin(theta), 0],
+        [0, np.sin(theta), np.cos(theta), 0],
+        [0, 0, 0, 1]
+    ])
 
-def plot_3d(ax, vertices, arestas, transformacao, cor):
+def rotacao_y(theta):
+    return np.array([
+        [np.cos(theta), 0, np.sin(theta), 0],
+        [0, 1, 0, 0],
+        [-np.sin(theta), 0, np.cos(theta), 0],
+        [0, 0, 0, 1]
+    ])
+
+def rotacao_z(theta):
+    return np.array([
+        [np.cos(theta), -np.sin(theta), 0, 0],
+        [np.sin(theta), np.cos(theta), 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1]
+    ])
+
+
+def plot_3d(ax, vertices, arestas, transformacao, cor,rotacionar= False, angulo=0,eixo='x'):
     vertices_homogeneos = np.concatenate([vertices, np.ones((vertices.shape[0], 1))], axis=-1)
-    vertices_transformados = (transformacao @ vertices_homogeneos.T).T[:, :3]
 
+    vertices_transformados = (transformacao @ vertices_homogeneos.T).T
+    if rotacionar:
+        if eixo == 'x':
+            vertices_transformados = (rotacao_x(angulo) @ vertices_transformados.T).T
+        elif eixo == 'y':
+            vertices_transformados = (rotacao_y(angulo) @ vertices_transformados.T).T
+        else:
+            vertices_transformados = (rotacao_z(angulo) @ vertices_transformados.T).T
+
+
+    vertices_transformados = vertices_transformados[:, :3]
     linhas = [(vertices_transformados[aresta[0]], vertices_transformados[aresta[1]]) for aresta in arestas]
     ax.add_collection3d(Line3DCollection(linhas, colors=cor))
 
@@ -81,7 +127,7 @@ def questao_dois():
     vertices_cone, arestas_cone = cone(raio_base_cone)
     translacao_cone = matriz_translacao(-5, 8.5, 0)
     escala_cone = matriz_escalonamento(0.4, 0.4, 0.4)
-    pontos_cone = plot_3d(ax, vertices_cone, arestas_cone, translacao_cone @ escala_cone, 'black')
+    pontos_cone = plot_3d(ax, vertices_cone, arestas_cone, translacao_cone @ escala_cone, 'black',rotacionar=False,angulo=(-np.pi/5),eixo='y')
 
     # Tronco de pirâmide
     tamanho_base_tronco = 8
@@ -100,16 +146,7 @@ def questao_dois():
                                                 circunferencias_intermediarias=10)
     translacao_toroide = matriz_translacao(-5, 5, 10)
     escala_toroide = matriz_escalonamento(1, 0.6, 1)
-    pontos_toroide = plot_3d(ax, vertices_toroide, arestas_toroide, escala_toroide @ translacao_toroide, 'grey')
-
-    x = np.linspace(-10, 10, 100)
-    y = np.linspace(-10, 10, 100)
-    X, Y = np.meshgrid(x, y)
-    Z = np.zeros_like(X)
-
-    ax.plot_surface(X, Y, Z, color='red', alpha=0.3)
-    ax.plot_surface(X, Z, Y, color='green', alpha=0.3)
-    ax.plot_surface(Z, X, Y, color='gray', alpha=0.3)
+    pontos_toroide = plot_3d(ax, vertices_toroide, arestas_toroide, escala_toroide @ translacao_toroide, 'grey',rotacionar=True,angulo=(-np.pi/4),eixo='y')
 
     ax.scatter(5, -5, 5, color='black', s=100)
 
@@ -131,3 +168,5 @@ def questao_dois():
         'arestas_tronco': arestas_tronco,
         'arestas_toroide': arestas_toroide,
     }
+
+questao_dois()
