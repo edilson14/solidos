@@ -42,4 +42,14 @@ def cilindro(raio, num_fatias=10, num_divisoes=10):
             next_vertex = (i + 1) % num_fatias + j * num_fatias
             arestas.append([current_vertex, next_vertex])
 
+    # Adiciona o centro do círculo inferior e superior
+    centro_inferior = [0, 0, z[0]]
+    centro_superior = [0, 0, z[-1]]
+    vertices = np.concatenate([vertices, [centro_inferior, centro_superior]], axis=0)
+
+    # Conecta as arestas do centro aos pontos do círculo inferior e superior
+    for i in range(num_fatias):
+        arestas.append([i, vertices.shape[0] - 2])
+        arestas.append([i + num_fatias, vertices.shape[0] - 1])
+
     return vertices, arestas

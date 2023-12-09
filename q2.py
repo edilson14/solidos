@@ -15,13 +15,23 @@ ax.set_title('Coordenadas do Mundo')
 # Define os limites do gráfico
 limites = [-10, 10]
 
-# Desenha as linhas que dividem o espaço 3D em octantes para facilitar
-# a identificação dos solidos em seus respectivos octantes
+# # Desenha as linhas que dividem o espaço 3D em octantes para facilitar
+# # a identificação dos solidos em seus respectivos octantes
 for s in [-1, 1]:
     ax.plot([0, 0], [0, 0], [s * limites[0], s * limites[1]], color='k', linestyle='--', linewidth=1)
     ax.plot([0, 0], [s * limites[0], s * limites[1]], [0, 0], color='k', linestyle='--', linewidth=1)
     ax.plot([s * limites[0], s * limites[1]], [0, 0], [0, 0], color='k', linestyle='--', linewidth=1)
-    # Legenda
+    # # Legenda
+
+
+# Seta no sentido positivo do eixo x
+ax.quiver(0, 0, 0, 5, 0, 0, color='green', label='Eixo X')
+
+# Seta no sentido positivo do eixo y
+ax.quiver(0, 0, 0, 0, 5, 0, color='blue', label="Eixo Y")
+
+# Seta no sentido positivo do eixo z
+ax.quiver(0, 0, 0, 0, 0, 5, color='red' , label='Eixo Z')
 
 # definição dos octantes
 ax.text(5, 5, 5, "octante 1")  # (+,+,+)
@@ -170,3 +180,5 @@ def questao_dois(eye = np.array([5, 5, -8])):
         'arestas_tronco': arestas_tronco,
         'arestas_toroide': arestas_toroide,
     }
+
+# questao_dois()

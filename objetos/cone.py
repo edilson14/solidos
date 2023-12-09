@@ -43,4 +43,12 @@ def cone(raio, num_fatias=10, num_divisoes=10):
             next_vertex = i + j * num_fatias
             arestas.append([current_vertex, next_vertex])
 
+    # Adiciona o centro da base
+    centro_base = [0, 0, z[0]]
+    vertices = np.concatenate([vertices, [centro_base]], axis=0)
+
+    # Conecta as arestas do centro aos pontos da base
+    for i in range(num_fatias):
+        arestas.append([i, vertices.shape[0] - 1])
+
     return vertices, arestas

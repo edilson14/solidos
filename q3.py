@@ -113,7 +113,7 @@ def questao_tres():
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
-
+    plt.title('Coordenadas da Câmera')
     plt.show()
 
     return {
