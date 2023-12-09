@@ -24,16 +24,15 @@ for s in [-1, 1]:
     # Legenda
 
 # definição dos octantes
-ax.text(5, 5, 5, "octante 1") #(+,+,+)
-ax.text(-5, 5, 5, "octante 2")#(-,+,+)
-ax.text(-5, -5, 5, "octante 3")#(-,-,+)
-ax.text(5, -5, 5, "octante 4")#(+,-,+)
-ax.text(5, 5, -5, "octante 5")#(+,+,-)
-ax.text(-5, 5, -5, "octante 6")#(-,+,-)
-ax.text(-5, -5, -5, "octante 7")#(-,-,-)
-ax.text(5, -5, -5, "octante 8")#(+,-,-)
+ax.text(5, 5, 5, "octante 1")  # (+,+,+)
+ax.text(-5, 5, 5, "octante 2")  # (-,+,+)
+ax.text(-5, -5, 5, "octante 3")  # (-,-,+)
+ax.text(5, -5, 5, "octante 4")  # (+,-,+)
+ax.text(5, 5, -5, "octante 5")  # (+,+,-)
+ax.text(-5, 5, -5, "octante 6")  # (-,+,-)
+ax.text(-5, -5, -5, "octante 7")  # (-,-,-)
+ax.text(5, -5, -5, "octante 8")  # (+,-,-)
 # ax
-
 
 
 ax.set_xlabel('X')
@@ -55,6 +54,7 @@ def matriz_escalonamento(sx, sy, sz):
                      [0, 0, sz, 0],
                      [0, 0, 0, 1]])
 
+
 def rotacao_x(theta):
     return np.array([
         [1, 0, 0, 0],
@@ -63,6 +63,7 @@ def rotacao_x(theta):
         [0, 0, 0, 1]
     ])
 
+
 def rotacao_y(theta):
     return np.array([
         [np.cos(theta), 0, np.sin(theta), 0],
@@ -70,6 +71,7 @@ def rotacao_y(theta):
         [-np.sin(theta), 0, np.cos(theta), 0],
         [0, 0, 0, 1]
     ])
+
 
 def rotacao_z(theta):
     return np.array([
@@ -80,7 +82,7 @@ def rotacao_z(theta):
     ])
 
 
-def plot_3d(ax, vertices, arestas, transformacao, cor,rotacionar= False, angulo=0,eixo='x'):
+def plot_3d(ax, vertices, arestas, transformacao, cor, rotacionar=False, angulo=0, eixo='x'):
     vertices_homogeneos = np.concatenate([vertices, np.ones((vertices.shape[0], 1))], axis=-1)
 
     vertices_transformados = (transformacao @ vertices_homogeneos.T).T
@@ -91,7 +93,6 @@ def plot_3d(ax, vertices, arestas, transformacao, cor,rotacionar= False, angulo=
             vertices_transformados = (rotacao_y(angulo) @ vertices_transformados.T).T
         else:
             vertices_transformados = (rotacao_z(angulo) @ vertices_transformados.T).T
-
 
     vertices_transformados = vertices_transformados[:, :3]
     linhas = [(vertices_transformados[aresta[0]], vertices_transformados[aresta[1]]) for aresta in arestas]
@@ -118,7 +119,7 @@ def questao_dois():
     # Cubo
     tamanho_aresta = 3
     vertices_cubo, arestas_cubo = cubo(tamanho_aresta)
-    translacao_cubo = matriz_translacao(tamanho_aresta + 2, 1, 0)
+    translacao_cubo = matriz_translacao(7, 3, 0)
     escala_cubo = matriz_escalonamento(1, 1, 1)
     pontos_cubo = plot_3d(ax, vertices_cubo, arestas_cubo, escala_cubo @ translacao_cubo, 'green')
 
@@ -127,7 +128,8 @@ def questao_dois():
     vertices_cone, arestas_cone = cone(raio_base_cone)
     translacao_cone = matriz_translacao(-5, 8.5, 0)
     escala_cone = matriz_escalonamento(0.4, 0.4, 0.4)
-    pontos_cone = plot_3d(ax, vertices_cone, arestas_cone, translacao_cone @ escala_cone, 'black',rotacionar=False,angulo=(-np.pi/5),eixo='y')
+    pontos_cone = plot_3d(ax, vertices_cone, arestas_cone, translacao_cone @ escala_cone, 'black', rotacionar=False,
+                          angulo=(-np.pi / 5), eixo='y')
 
     # Tronco de pirâmide
     tamanho_base_tronco = 8
@@ -144,12 +146,12 @@ def questao_dois():
     raio_toroide = 1
     vertices_toroide, arestas_toroide = toroide(r_raio=raio_toroide, R_raio=Raio_toroide,
                                                 circunferencias_intermediarias=10)
-    translacao_toroide = matriz_translacao(-5, 5, 10)
+    translacao_toroide = matriz_translacao(-1, 5, 10)
     escala_toroide = matriz_escalonamento(1, 0.6, 1)
-    pontos_toroide = plot_3d(ax, vertices_toroide, arestas_toroide, escala_toroide @ translacao_toroide, 'grey',rotacionar=True,angulo=(-np.pi/4),eixo='y')
+    pontos_toroide = plot_3d(ax, vertices_toroide, arestas_toroide, escala_toroide @ translacao_toroide, 'grey',
+                             rotacionar=True, angulo=(-np.pi / 4), eixo='y')
 
-    ax.scatter(5, -5, 5, color='black', s=100)
-
+    ax.scatter(7, 3, -8, color='black', s=100)
 
     plt.grid()
     plt.show()
@@ -168,5 +170,3 @@ def questao_dois():
         'arestas_tronco': arestas_tronco,
         'arestas_toroide': arestas_toroide,
     }
-
-questao_dois()
