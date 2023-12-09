@@ -54,3 +54,5 @@ def plot_objeto(vertices, arestas):
     ax.set_zlabel('Eixo Z')
 
     plt.show()
+
+questao_um()

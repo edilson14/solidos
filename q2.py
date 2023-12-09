@@ -101,7 +101,7 @@ def plot_3d(ax, vertices, arestas, transformacao, cor, rotacionar=False, angulo=
     return vertices_transformados
 
 
-def questao_dois():
+def questao_dois(eye = np.array([5, 5, -8])):
     # Esfera
     raio_esfera = 3
     vertices_esfera, arestas_esfera = criar_esfera(raio_esfera, 10)
@@ -151,7 +151,7 @@ def questao_dois():
     pontos_toroide = plot_3d(ax, vertices_toroide, arestas_toroide, escala_toroide @ translacao_toroide, 'grey',
                              rotacionar=True, angulo=(-np.pi / 4), eixo='y')
 
-    ax.scatter(7, 3, -8, color='black', s=100)
+    ax.scatter(*zip(eye), color='black', s=100)
 
     plt.grid()
     plt.show()
