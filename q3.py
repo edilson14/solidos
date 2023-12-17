@@ -26,10 +26,10 @@ def mostrar_solidos_no_sistema_de_camera(ax, pontos_solido, arestas_solido, matr
 
 
 def questao_tres():
-    # eye = np.array([5, 5, -8]) #quinto octante
+    eye = np.array([5, 5, -8]) #quinto octante
 
     # Câmera abaixo do centro
-    eye = np.array([0, -8, 0])
+    # eye = np.array([0, -8, 0])
     # Câmera na frente do centro
     # eye = np.array([0, 0, -8])
 

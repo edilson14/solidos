@@ -8,6 +8,7 @@ from objetos.esfera import criar_esfera
 from objetos.cubo import cubo
 from objetos.tronco import tronco
 from objetos.toroide import toroide
+f
 
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1, projection='3d')

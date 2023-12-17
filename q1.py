@@ -25,7 +25,7 @@ def questao_um():
     # Toroide
     R = 2
     r = 1
-    num_circles = 10
+    num_circles = 30
     vertices, arestas = toroide(r, R, num_circles)
     plot_objeto(vertices, arestas)
 
